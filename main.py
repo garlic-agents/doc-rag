@@ -1,16 +1,23 @@
-# This is a sample Python script.
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from dotenv import load_dotenv
+from vector_db import VectorDatabase
+
+# 加载 .env 文件
+load_dotenv(".env.local")
+load_dotenv(".env")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+## 初始化
+def init():
+    pass
 
 
-# Press the green button in the gutter to run the script.
+## 开始聊天
+def start_chat():
+    pass
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    init()
+    start_chat()
