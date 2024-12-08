@@ -1,5 +1,4 @@
 from enum import Enum
-from .dashscope_embedding import DashscopeEmbedding
 
 
 class Engine(Enum):
@@ -8,18 +7,19 @@ class Engine(Enum):
 
 class DataEmbedding:
 
-    def __init__(self, engine: Engine = Engine.DASHSCOPE):
-        self.engine = engine
-        if self.engine == Engine.DASHSCOPE:
-            self._embedding_factory = DashscopeEmbedding()
-        else:
-            raise NotImplementedError
-
     def embed(self, data) -> list:
-        if self.engine == Engine.DASHSCOPE:
-            return self._embedding_factory.embed(data)
-        else:
-            raise NotImplementedError
+        ...
 
     def embed_list(self, data_list: list) -> list:
-        return [self.embed(data) for data in data_list]
+        ...
+
+
+class DataEmbeddingFactory:
+
+    @staticmethod
+    def create(engine: Engine = Engine.DASHSCOPE) -> DataEmbedding:
+        from .dashscope_embedding import DashscopeEmbedding
+        if engine == Engine.DASHSCOPE:
+            return DashscopeEmbedding()
+        else:
+            raise NotImplementedError

@@ -1,9 +1,10 @@
 import dashscope
 from dashscope import TextEmbedding
 from http import HTTPStatus
+from .data_embedding import DataEmbedding
 
 
-class DashscopeEmbedding:
+class DashscopeEmbedding(DataEmbedding):
 
     def __init__(self, model=TextEmbedding.Models.text_embedding_v1):
         self.model = model
@@ -20,3 +21,6 @@ class DashscopeEmbedding:
             return resp.output.get("embeddings")[0].get("embedding")
         else:
             raise Exception(f"Failed to embed data: {resp.message}")
+
+    def embed_list(self, source_list: list) -> list:
+        return [self.embed(source_str) for source_str in source_list]
