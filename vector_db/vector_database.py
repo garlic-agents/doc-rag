@@ -54,7 +54,7 @@ class VectorDatabase:
         if query is None or query == "":
             raise Exception("Query is empty")
         query_result = self.collection.query(query_texts=[query], n_results=5)
-        return query_result
+        return query_result.get("documents", [[]])[0]
 
 
 class DocRagCustomEmbeddingFunction(EmbeddingFunction[Documents]):

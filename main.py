@@ -2,6 +2,8 @@ import os
 import argparse
 
 from dotenv import load_dotenv
+
+from llm import ChatAI
 from utils import input_util
 from documents import DocumentParser
 from vector_db import VectorDatabase
@@ -33,7 +35,12 @@ def init(vector_db: VectorDatabase):
 
 ## 开始聊天
 def start_chat(vector_db: VectorDatabase):
-    pass
+    chat_ai = ChatAI(vector_db=vector_db)
+    while True:
+        question = input_util.get_input("#请输入问题")
+        if question in ["/q", "/quit", "/exit"]:
+            break
+        chat_ai.ask(question)
 
 
 if __name__ == '__main__':

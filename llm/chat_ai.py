@@ -5,6 +5,8 @@ from openai.types.chat import ChatCompletionMessageParam
 
 from vector_db import VectorDatabase
 
+DEFAULT_RESPONSE = [{"delta": {"content": "未知错误"}}]
+
 
 class ChatAI:
 
@@ -47,9 +49,11 @@ class ChatAI:
 
     def _init_prompt(self, question: str):
         # 优化问题内容，方便向量化数据库查询（待定）
-        # TODO 查询向量化数据库
-        self.vector_db.query(question)
-        pass
+        # 查询向量化数据库
+        query_data_list = self.vector_db.query(question)
+        self.messages[0]["content"] = "请根据一下知识库的内容进行回答：\n\n"
+        for query_data in query_data_list:
+            self.messages[0]["content"] += f"{query_data}\n"
 
     def _send_request(self):
         completion = self.client.chat.completions.create(
@@ -58,5 +62,22 @@ class ChatAI:
             stream=self.stream,
             stream_options={"include_usage": True}
         )
+        response_text = ""
         for chunk in completion:
-            print(chunk.model_dump_json())
+            response = chunk.model_dump()
+            choices = response.get("choices", DEFAULT_RESPONSE)
+            if len(choices) <= 0:
+                continue
+            delta_data = choices[0].get("delta", DEFAULT_RESPONSE[0])
+            if delta_data is None:
+                continue
+            content = delta_data.get("content", "")
+            if content is None or content == "":
+                continue
+            response_text += content
+            print(content, end="")
+        print("\n")
+        self.messages.append({
+            "role": "assistant",
+            "content": response_text
+        })
