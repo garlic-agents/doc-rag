@@ -17,9 +17,14 @@ def test_vector_database():
 def test_vector_query_all():
     vdb = VectorDatabase()
     result = vdb.collection.query(
-        query_texts=["山西是中国的省份，位于华北地区"],
-        n_results=1,
+        query_texts=["测试时间为2024年7月27日（星期六）8:30至14:00"],
+        n_results=4,
     )
     # json 格式化，并添加换行
     print(f"\nQuery Result: {json.dumps(result, indent=4, ensure_ascii=False)}\n")
     assert result is not None
+
+
+def test_vector_delete():
+    vdb = VectorDatabase()
+    vdb.delete_collection_data()
