@@ -7,6 +7,13 @@ from vector_db import VectorDatabase
 
 DEFAULT_RESPONSE = [{"delta": {"content": "未知错误"}}]
 
+PROMPT_TEMPLATE = """
+使用以下上下文来回答问题。
+如果你不知道答案，只需要返回不知道，不要试图编造答案，并尽可能保持答案简洁。
+
+{context}
+"""
+
 
 class ChatAI:
 
@@ -51,16 +58,17 @@ class ChatAI:
         # 优化问题内容，方便向量化数据库查询（待定）
         # 查询向量化数据库
         query_data_list = self.vector_db.query(question)
-        self.messages[0]["content"] = "请根据一下知识库的内容进行回答：\n\n"
+        context_str = ""
         for query_data in query_data_list:
-            self.messages[0]["content"] += f"{query_data}\n"
+            context_str += f"{query_data}\n"
+        self.messages[0]["content"] = PROMPT_TEMPLATE.format(context=context_str)
 
     def _send_request(self):
         completion = self.client.chat.completions.create(
             model=self.model,
             messages=self.messages,
             stream=self.stream,
-            stream_options={"include_usage": True}
+            stream_options={"include_usage": True},
         )
         response_text = ""
         for chunk in completion:
