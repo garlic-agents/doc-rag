@@ -38,8 +38,13 @@ def start_chat(vector_db: VectorDatabase):
     chat_ai = ChatAI(vector_db=vector_db)
     while True:
         question = input_util.get_input("#请输入问题")
-        if question in ["/q", "/quit", "/exit"]:
-            break
+        if question.startswith("/"):
+            if question in ["/q", "/quit", "/exit"]:
+                # 退出
+                break
+            else:
+                print("未知指令，请重新输入")
+                continue
         chat_ai.ask(question)
 
 

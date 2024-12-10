@@ -59,7 +59,10 @@ def dedoc_metadata_to_vector_metadata(metadata: dict) -> dict:
     }
 
 
+# 文档解析器
 class DocumentParser:
+
+    # 初始化
     def __init__(self, path: str):
         self.path = path
         if not path:
@@ -67,23 +70,25 @@ class DocumentParser:
         if not os.path.exists(path):
             raise Exception("文件不存在")
 
+    # 解析文档
     def parse(self) -> List[VectorDBData]:
         # 判断文件的类型
         if self.path.endswith(".docx"):
+            # docx 文件解析
+            # 1. 将 docx 文件转换为 markdown
             markdown_text = convert_docx_to_markdown(self.path)
-            # 配置分割器
+            # 2. 配置分割器
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=1000,
                 chunk_overlap=200,
                 separators=["\n\n", "\n", "。", "！", "？", ".", "!", "?", " ", ""],
                 keep_separator=True
             )
-            # 创建 Document 对象并分割
+            # 4. 使用转换的md内容，创建 Document 对象用于分块
             document_data = Document(page_content=markdown_text)
-            # 执行分块
+            # 5. 使用分割器实现文本分块
             chunks = text_splitter.split_documents([document_data])
-
-            # 将分块转换为 VectorDBData
+            # 6. 将分块转换为 VectorDBData 用于储存到向量数据库中
             vector_db_data_list: List[VectorDBData] = list()
             for index, chunk in enumerate(chunks):
                 print(f"块 {index} 长度：{len(chunk.page_content)}")
@@ -93,9 +98,7 @@ class DocumentParser:
                     "id": f"{index}",
                     "data": chunk.page_content,
                 })
-
             print(f"分块数为：{len(vector_db_data_list)}")
             return vector_db_data_list
-
         else:
             raise Exception("不支持的文件类型")
