@@ -2,7 +2,6 @@ from typing import TypedDict
 
 import chromadb
 from chromadb import Documents, EmbeddingFunction, Embeddings, Collection
-from typing_extensions import Optional
 
 from embedding.data_embedding import DataEmbeddingFactory
 
@@ -13,7 +12,6 @@ class VectorDBData(TypedDict):
     id: str
     data: str
     metadata: dict | None
-
 
 class VectorDatabase:
 
