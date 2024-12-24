@@ -8,14 +8,6 @@ from markitdown import MarkItDown
 from vector_db.vector_database import VectorDBData
 
 
-def dedoc_metadata_to_vector_metadata(metadata: dict) -> dict:
-    return {
-        "title": metadata.get("title", ""),
-        "type": metadata.get("type", ""),
-        "text_as_html": metadata.get("text_as_html", ""),
-    }
-
-
 def new_docx_to_markdown(docx_path: str) -> str:
     markitdown = MarkItDown()
     result = markitdown.convert(docx_path)
@@ -34,11 +26,11 @@ def parse_docx_file(path: str) -> list[VectorDBData]:
         separators=["\n\n", "\n", "。", "！", "？", ".", "!", "?", " ", ""],
         keep_separator=True
     )
-    # 4. 使用转换的md内容，创建 Document 对象用于分块
+    # 3. 使用转换的md内容，创建 Document 对象用于分块
     document_data = Document(page_content=markdown_text)
-    # 5. 使用分割器实现文本分块
+    # 4. 使用分割器实现文本分块
     chunks = text_splitter.split_documents([document_data])
-    # 6. 将分块转换为 VectorDBData 用于储存到向量数据库中
+    # 5. 将分块转换为 VectorDBData 用于储存到向量数据库中
     vector_db_data_list: List[VectorDBData] = list()
     for index, chunk in enumerate(chunks):
         print(f"块 {index} 长度：{len(chunk.page_content)}")

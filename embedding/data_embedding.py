@@ -7,7 +7,7 @@ class Engine(Enum):
 
 class DataEmbedding:
 
-    def embed(self, data) -> list:
+    def embed(self, data: str) -> list:
         ...
 
     def embed_list(self, data_list: list) -> list:

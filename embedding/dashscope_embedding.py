@@ -9,7 +9,7 @@ class DashscopeEmbedding(DataEmbedding):
     def __init__(self, model=TextEmbedding.Models.text_embedding_v1):
         self.model = model
 
-    def embed(self, source_str) -> list:
+    def embed(self, source_str: str) -> list:
         resp = dashscope.TextEmbedding.call(model=self.model, input=source_str)
         if (resp.status_code == HTTPStatus.OK
                 and resp.output is not None
