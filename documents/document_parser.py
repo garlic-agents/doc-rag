@@ -18,7 +18,6 @@ def parse_docx_file(path: str) -> list[VectorDBData]:
     # docx 文件解析
     # 1. 将 docx 文件转换为 markdown
     markdown_text = new_docx_to_markdown(path)
-    print(f"markdown_text: {markdown_text}")
     # 2. 配置分割器
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
